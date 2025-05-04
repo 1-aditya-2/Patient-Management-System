@@ -11,7 +11,8 @@ async function initDb() {
       name TEXT NOT NULL,
       email TEXT UNIQUE NOT NULL,
       password TEXT NOT NULL,
-      role TEXT NOT NULL DEFAULT 'patient'
+      treatment TEXT NOT NULL,
+      department TEXT NOT NULL
     );
   `);
 }
@@ -26,16 +27,15 @@ async function getUserByEmail(email) {
     }
   }
 
-async function registerUser(name, email, password, role = 'patient') {
+async function registerUser(name, email, password, treatment, department) {
   try {
     await db.exec(
-        `INSERT INTO users (name, email, password, role)
-        VALUES ('${name}', '${email}', '${password}', '${role}')`
+        `INSERT INTO users (name, email, password, treatment, department)
+        VALUES ('${name}', '${email}', '${password}', '${treatment}', '${department}')`
     );
-
     return { success: true };
   } catch (error) {
-    return { success: false, message: "Email already exists or insert failed.", error };
+    return { success: false, message: `Email already exists or insert failed due to ${error}`};
   }
 }
 
